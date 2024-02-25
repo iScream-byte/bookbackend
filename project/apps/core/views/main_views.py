@@ -52,7 +52,6 @@ class BookListViewSetUnderAuthors(ListRetrieveViewSet):
         return queryset
 
     relational_filter = {"book_id": "parent_lookup_lekhok_id"}
-    print(relational_filter)
 
 class AuthorViewSet(ListRetrieveViewSet):
     model = Author

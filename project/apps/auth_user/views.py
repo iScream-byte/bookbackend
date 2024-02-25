@@ -31,7 +31,6 @@ class UserLogin(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data,
                                            context={'request': request})
-        print(request.data)
         if not serializer.is_valid():
             return Response({"status": HTTP_401_UNAUTHORIZED})
         user = serializer.validated_data['user']
@@ -47,7 +46,6 @@ class UserLogin(ObtainAuthToken):
 class UserLogout(APIView):
     def post(self, request):
         user_id = request.data.get("user_id")
-        print(user_id)
         token_object = Token.objects.filter(user=user_id)
         if token_object.exists():
             token_object.delete()
