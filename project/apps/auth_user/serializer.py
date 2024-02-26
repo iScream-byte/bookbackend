@@ -3,4 +3,4 @@ from .models import User
 class UserSerializer(FlexFieldsModelSerializer):
     class Meta:
         model=User
-        exclude = ('password',)
+        exclude = ('password','groups','user_permissions')

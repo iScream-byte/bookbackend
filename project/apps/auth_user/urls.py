@@ -1,12 +1,8 @@
 from django.urls import path, include
 from rest_framework_extensions.routers import ExtendedSimpleRouter as SimpleRouter
-from .views import UserViewSet, UserLogin, UserLogout, UserRegister
+from .views import  UserLogin, UserLogout, UserRegister
 
-auth_router = SimpleRouter()
 
-auth_router.register("all-users-list",
-                     UserViewSet,
-                     basename="all_users")
 
 urlpatterns = [
     path('login/', UserLogin.as_view()),
@@ -15,4 +11,4 @@ urlpatterns = [
     path('browsable-api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
 
-urlpatterns = urlpatterns + auth_router.urls
+urlpatterns = urlpatterns

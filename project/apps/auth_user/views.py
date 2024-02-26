@@ -9,22 +9,6 @@ from .models import User
 from .serializer import UserSerializer
 
 
-class UserViewSet(ListRetrieveViewSet):
-    model = User
-    serializer_class = UserSerializer
-    service_class = ""
-    queryset = model.objects.all()
-    filter_backends = [filters.SearchFilter]
-    authentication_classes = [BasicAuthentication, TokenAuthentication]
-    permission_classes = [IsAuthenticated]
-    lookup_field = "id"
-    search_fields = [
-        'username',
-    ]
-
-    def get_queryset(self):
-        queryset = self.queryset.filter()
-        return queryset
 
 
 class UserLogin(ObtainAuthToken):

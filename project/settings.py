@@ -64,25 +64,25 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'project.wsgi.application'
-#
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.mysql",
-#         "NAME": "library_",
-#         "USER": "beassql",
-#         "PASSWORD": "A$dfg1612",
-#         "HOST": "182.73.216.92",
-#         "PORT": "4512",
-#         "OPTIONS": {"charset": "utf8mb4"},
-#     }
-# }
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": "library_",
+        "USER": "beassql",
+        "PASSWORD": "A$dfg1612",
+        "HOST": "192.168.1.17",
+        "PORT": "4512",
+        "OPTIONS": {"charset": "utf8mb4"},
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
 AUTH_PASSWORD_VALIDATORS = [

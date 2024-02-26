@@ -1,12 +1,13 @@
 from django.urls import path, include
 from .views import Test, BookListViewSet, PublishersViewset, AuthorViewSet, BookListViewSetUnderAuthors, \
-    ReturnUserNameExistsViewSet
+    ReturnUserNameExistsViewSet, UserViewSet
 from rest_framework_extensions.routers import ExtendedSimpleRouter as SimpleRouter
 
 main_router = SimpleRouter()
 
 book_router = main_router.register('all-books', BookListViewSet, basename="all_books")
 author_router = main_router.register('all-authors', AuthorViewSet, basename="all_authors")
+user_router = main_router.register('all-users', UserViewSet, basename="all_users")
 
 book_router.register("publishers",
                      PublishersViewset,
