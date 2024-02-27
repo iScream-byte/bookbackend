@@ -9,6 +9,9 @@ from auth_user.serializer import UserSerializer
 from rest_framework.authentication import BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import action
+from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_403_FORBIDDEN
+
+from django.db import transaction
 
 
 class Test(APIView):
@@ -16,7 +19,7 @@ class Test(APIView):
         return Response("API Cholchhe")
 
 
-class BookListViewSet(ListRetrieveUpdateViewSet):
+class BookListViewSet(ListCreateRetrieveUpdateDestroyViewSet):
     model = BookList
     serializer_class = BookListSerializer
     service_class = ""
@@ -35,6 +38,31 @@ class BookListViewSet(ListRetrieveUpdateViewSet):
     def get_queryset(self):
         queryset = self.queryset.filter()
         return queryset
+
+    @transaction.atomic
+    def create(self, request, *args, **kwargs):
+        import time
+        time.sleep(5)
+        ISBN = request.data.get("ISBN")
+        title = request.data.get('title')
+        yearOfPublication = request.data.get('yearOfPublication')
+        author_id = request.data.get('author')
+
+        if not ISBN or not title or not yearOfPublication or not author_id:
+            return Response({'code': HTTP_403_FORBIDDEN, "message": "Insufficient data", 'book': None})
+
+        author = Author.objects.filter(pk=author_id)
+        if not author.exists():
+            return Response({'code': HTTP_403_FORBIDDEN, "message": "unknown author", 'book': None})
+
+        book = BookList.objects.filter(ISBN=ISBN)
+        if book.exists():
+            return Response({'code': HTTP_403_FORBIDDEN, "message": "This book already exists", 'book': None})
+
+        b = BookList.objects.create(ISBN=ISBN, title=title, yearOfPublication=yearOfPublication, author=author.first())
+        serializer = BookListSerializer(instance=b)
+
+        return Response({'code': HTTP_201_CREATED, "message": "new book added", 'book': serializer.data})
 
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(request, *args, **kwargs)
@@ -68,6 +96,14 @@ class AuthorViewSet(ListRetrieveViewSet):
     def get_queryset(self):
         queryset = self.queryset.filter()
         return queryset
+
+    @action(detail=False, url_path='get-author-list', methods=['GET'])
+    def get_author_list(self, *args, **kwargs):
+        all_authors = Author.objects.all()
+        all_authors_list = []
+        for i in all_authors:
+            all_authors_list.append({'id': i.id, 'name': i.name})
+        return Response(all_authors_list)
 
 
 class PublishersViewset(ListRetrieveViewSet):

@@ -26,6 +26,7 @@ class PublisherSerializer(FlexFieldsModelSerializer):
 
 
 class BookListSerializer(FlexFieldsModelSerializer):
+
     class Meta:
         model = BookList
         fields = '__all__'
