@@ -7,12 +7,13 @@ from rest_framework.status import HTTP_401_UNAUTHORIZED, HTTP_200_OK, HTTP_201_C
 from project.apps.lib.custom.custom_views import *
 from .models import User
 from .serializer import UserSerializer
-
+import time
 
 
 
 class UserLogin(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
+        time.sleep(2)
         serializer = self.serializer_class(data=request.data,
                                            context={'request': request})
         if not serializer.is_valid():
@@ -29,6 +30,7 @@ class UserLogin(ObtainAuthToken):
 
 class UserLogout(APIView):
     def post(self, request):
+        time.sleep(2)
         user_id = request.data.get("user_id")
         token_object = Token.objects.filter(user=user_id)
         if token_object.exists():

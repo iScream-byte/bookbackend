@@ -10,8 +10,9 @@ from rest_framework.authentication import BasicAuthentication, TokenAuthenticati
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import action
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_403_FORBIDDEN
-
 from django.db import transaction
+
+import time
 
 
 class Test(APIView):
@@ -41,8 +42,7 @@ class BookListViewSet(ListCreateRetrieveUpdateDestroyViewSet):
 
     @transaction.atomic
     def create(self, request, *args, **kwargs):
-        import time
-        time.sleep(5)
+        time.sleep(2)
         ISBN = request.data.get("ISBN")
         title = request.data.get('title')
         yearOfPublication = request.data.get('yearOfPublication')
@@ -65,7 +65,9 @@ class BookListViewSet(ListCreateRetrieveUpdateDestroyViewSet):
         return Response({'code': HTTP_201_CREATED, "message": "new book added", 'book': serializer.data})
 
     def partial_update(self, request, *args, **kwargs):
-        return super().partial_update(request, *args, **kwargs)
+        time.sleep(2)
+        book = super().partial_update(request, *args, **kwargs)
+        return Response({'code': HTTP_200_OK, "message": "Updated", 'book': book.data})
 
 
 class BookListViewSetUnderAuthors(ListRetrieveViewSet):
