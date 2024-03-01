@@ -6,6 +6,7 @@ class BookList(models.Model):
     title = models.CharField(max_length=100, null=True, blank=True)
     author = models.ForeignKey("core.Author", related_name="books", on_delete=models.PROTECT)
     yearOfPublication = models.IntegerField(null=True, blank=True)
+    image = models.FileField(null=True,blank=True)
 
     class Meta:
         verbose_name = "Book"
@@ -50,7 +51,7 @@ class Genre(models.Model):
 
 
 class Publisher(models.Model):
-    book=models.ForeignKey("core.BookList",related_name="books",on_delete=models.PROTECT,null=True,blank=True)
+    book = models.ForeignKey("core.BookList", related_name="books", on_delete=models.PROTECT, null=True, blank=True)
     name = models.CharField(max_length=25)
     address = models.TextField()
     contact = models.IntegerField()

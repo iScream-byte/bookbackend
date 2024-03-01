@@ -11,6 +11,9 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import action
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_403_FORBIDDEN
 from django.db import transaction
+from django.http import FileResponse, HttpResponse
+from django.conf import settings
+import os
 
 import time
 
@@ -47,6 +50,7 @@ class BookListViewSet(ListCreateRetrieveUpdateDestroyViewSet):
         title = request.data.get('title')
         yearOfPublication = request.data.get('yearOfPublication')
         author_id = request.data.get('author')
+        image = request.data.get('image')
 
         if not ISBN or not title or not yearOfPublication or not author_id:
             return Response({'code': HTTP_403_FORBIDDEN, "message": "Insufficient data", 'book': None})
@@ -59,8 +63,12 @@ class BookListViewSet(ListCreateRetrieveUpdateDestroyViewSet):
         if book.exists():
             return Response({'code': HTTP_403_FORBIDDEN, "message": "This book already exists", 'book': None})
 
-        b = BookList.objects.create(ISBN=ISBN, title=title, yearOfPublication=yearOfPublication, author=author.first())
+        b = BookList.objects.create(ISBN=ISBN, title=title, yearOfPublication=yearOfPublication, author=author.first(),
+                                    image=image)
         serializer = BookListSerializer(instance=b)
+
+        # b = BookList.objects.all()[0]
+        # serializer = BookListSerializer(instance=b)
 
         return Response({'code': HTTP_201_CREATED, "message": "new book added", 'book': serializer.data})
 
@@ -125,7 +133,7 @@ class ReturnUserNameExistsViewSet(APIView):
     def post(self, request):
         username = (request.data.get("username"))
         user_object = User.objects.filter(username=username)
-        print(user_object)
+        time.sleep(2)
         if user_object.exists():
             return Response(True)
         else:
@@ -157,3 +165,10 @@ class UserViewSet(ListRetrieveViewSet):
         instance.is_active = not instance.is_active
         instance.save()
         return Response("done")
+
+
+def return_image(request, image_name):
+    file_path = (os.path.join(settings.BASE_DIR, "media", image_name))
+    img = open(file_path, 'rb')
+    response = FileResponse(img)
+    return response
