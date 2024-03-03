@@ -1,6 +1,6 @@
 from django.urls import path, include
 from .views import Test, BookListViewSet, PublishersViewset, AuthorViewSet, BookListViewSetUnderAuthors, \
-    ReturnUserNameExistsViewSet, UserViewSet
+    ReturnUserNameExistsViewSet, UserViewSet, AllCounts
 from rest_framework_extensions.routers import ExtendedSimpleRouter as SimpleRouter
 
 main_router = SimpleRouter()
@@ -21,6 +21,7 @@ author_router.register("books",
 
 urlpatterns = [
     path('test', Test.as_view()),
-    path('check-username/', ReturnUserNameExistsViewSet.as_view())
+    path('check-username/', ReturnUserNameExistsViewSet.as_view()),
+    path('all_counts/',AllCounts.as_view())
 ]
 urlpatterns = urlpatterns + main_router.urls

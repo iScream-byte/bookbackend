@@ -40,7 +40,15 @@ class BookListViewSet(ListCreateRetrieveUpdateDestroyViewSet):
     ]
 
     def get_queryset(self):
-        queryset = self.queryset.filter()
+        sort_column = self.request.GET.get('sortby')
+        sort_type = self.request.GET.get('sortType')
+        if sort_column and sort_type:
+            value = sort_column
+            if sort_type == 'desc':
+                value = '-' + value
+            queryset = self.queryset.filter().order_by(value)
+        else:
+            queryset = self.queryset.filter()
         return queryset
 
     @transaction.atomic
@@ -172,3 +180,10 @@ def return_image(request, image_name):
     img = open(file_path, 'rb')
     response = FileResponse(img)
     return response
+
+
+class AllCounts(APIView):
+    def get(self, request):
+        user_count = User.objects.all().count()
+        book_count = BookList.objects.all().count()
+        return Response({"user_count": user_count, "book_count": book_count})
