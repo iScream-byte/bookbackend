@@ -40,6 +40,7 @@ class BookListViewSet(ListCreateRetrieveUpdateDestroyViewSet):
     ]
 
     def get_queryset(self):
+        time.sleep(2)
         sort_column = self.request.GET.get('sortby')
         sort_type = self.request.GET.get('sortType')
         if sort_column and sort_type:
@@ -163,11 +164,13 @@ class UserViewSet(ListRetrieveViewSet):
     ]
 
     def get_queryset(self):
+        time.sleep(1)
         queryset = self.queryset.filter()
         return queryset
 
     @action(methods=['GET'], detail=True, url_path='toggle-active-status')
     def toggle_is_active(self, *args, **kwargs):
+        time.sleep(1)
         id_to_be_toggled = kwargs.get('id')
         instance = self.model.objects.filter(id=id_to_be_toggled).first()
         instance.is_active = not instance.is_active
@@ -184,6 +187,7 @@ def return_image(request, image_name):
 
 class AllCounts(APIView):
     def get(self, request):
+        time.sleep(1)
         user_count = User.objects.all().count()
         book_count = BookList.objects.all().count()
         return Response({"user_count": user_count, "book_count": book_count})
